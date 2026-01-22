@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Validación de Certificado</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    .gov-header {
+      background: #0b3c2d;
+      color: #ffffff;
+      padding: 14px 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .gov-inner {
+      max-width: 900px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+    }
+    .escudo {
+      width: 70px;
+      height: 70px;
+      background: #ffffff;
+      color: #0b3c2d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      border-radius: 6px;
+      margin-right: 15px;
+      font-size: 12px;
+    }
+    .gov-title {
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    .gov-subtitle {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    body {
+      font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #0b3c2d 0%, #145a32 40%, #e9ecef 100%);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 650px;
+      margin: 60px auto;
+      background: #ffffff;
+      padding: 35px;
+      border-radius: 6px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+      border-top: 8px solid #8b1e3f;
+    }
+    h1 {
+      text-align: center;
+      color: #0b3c2d;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 25px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 14px;
+      background: #8b1e3f;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #6f172f;
+    }
+    .resultado {
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 5px;
+      display: none;
+    }
+    .legal {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #555;
+      text-align: center;
+    }
+    .valido {
+      background: #e8f7ee;
+      color: #1e8449;
+      border: 1px solid #1e8449;
+    }
+    .invalido {
+      background: #fdecea;
+      color: #922b21;
+      border: 1px solid #922b21;
+    }
+  </style>
+</head>
+<body>
+  <header class="gov-header">
+    <div class="gov-inner">
+      <div class="escudo">ESCUDO</div>
+      <div class="gov-text">
+        <div class="gov-title">Sistema de Validación de Certificados</div>
+        <div class="gov-subtitle">Sistema Institucional de Consulta</div>
+      </div>
+    </div>
+  </header>
+  <div class="container">
+    <h1>Validación de Certificado</h1>
+
+    <label for="folio">Folio del certificado</label>
+    <input type="text" id="folio" placeholder="Ej. CERT-2026-001" />
+
+    <label for="nombre">Nombre del titular</label>
+    <input type="text" id="nombre" placeholder="Nombre completo" />
+
+    <button onclick="validarCertificado()">Validar</button>
+
+    <div id="resultado" class="resultado"></div>
+
+    <p class="legal">Este documento es válido únicamente como consulta informativa dentro del Sistema de Validación de Certificados.</p>
+  </div>
+
+  <script>
+    function validarCertificado() {
+      const folio = document.getElementById('folio').value.trim();
+      const nombre = document.getElementById('nombre').value.trim();
+      const resultado = document.getElementById('resultado');
+
+      // Datos de ejemplo (simulan una base de datos)
+      const certificados = [
+        { folio: 'CERT-2026-001', nombre: 'Juan Pérez', curso: 'Primeros Auxilios', fecha: '10/01/2026' },
+        { folio: 'CERT-2026-002', nombre: 'María López', curso: 'Nutrición Básica', fecha: '15/01/2026' },
+        {
+          folio: 'CERT-2018-005',
+          nombre: 'Jonathan Villafuerte Dambóa',
+          curp: 'VIGJ000503HCSLMNA9',
+          institucion: 'Escuela Preparatoria Número 5 del Estado',
+          estado: 'Tuxtla Gutiérrez, Chiapas',
+          cct: '07EBH0045B',
+          promedio: '8.9',
+          fecha: '22 de marzo de 2018'
+        }
+      ];
+
+      const encontrado = certificados.find(c => c.folio === folio && c.nombre.toLowerCase() === nombre.toLowerCase());
+
+      resultado.style.display = 'block';
+
+      if (encontrado) {
+        resultado.className = 'resultado valido';
+        resultado.innerHTML = `
+          <strong>Certificado válido</strong><br><br>
+          <strong>Nombre:</strong> ${encontrado.nombre}<br>
+          ${encontrado.curp ? `<strong>CURP:</strong> ${encontrado.curp}<br>` : ''}
+          ${encontrado.institucion ? `<strong>Institución:</strong> ${encontrado.institucion}<br>` : ''}
+          ${encontrado.estado ? `<strong>Estado:</strong> ${encontrado.estado}<br>` : ''}
+          ${encontrado.cct ? `<strong>CCT:</strong> ${encontrado.cct}<br>` : ''}
+          ${encontrado.promedio ? `<strong>Promedio:</strong> ${encontrado.promedio}<br>` : ''}
+          ${encontrado.curso ? `<strong>Curso:</strong> ${encontrado.curso}<br>` : ''}
+          <strong>Fecha de finalización/emisión:</strong> ${encontrado.fecha}
+        `;
+      } else {
+        resultado.className = 'resultado invalido';
+        resultado.innerHTML = '<strong>Certificado no encontrado o datos incorrectos.</strong>';
+      }
+    }
+  </script>
+</body>
+</html>
